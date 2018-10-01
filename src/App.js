@@ -22,6 +22,12 @@ class App extends Component {
       showingInfoWindow: true
     });
   }
+  onNameClick(coffeePlace) {
+    console.log("onNameClick:", coffeePlace)
+    this.setState({
+      selectedPlace: coffeePlace.venue
+    });
+  }
   componentDidMount() {
     this.getVenues()
   }
@@ -34,49 +40,64 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to Mirco´s favorite cafe spots in Berlin-Mitte</h1>
         </header>
+        <div className="box-container">
         <Map
           google={this.props.google}
           initialCenter={{
-            lat: 52.529186,
-            lng: 13.395621
+            lat: 52.529715,
+            lng: 13.401338
           }}
-          zoom={14}
+          zoom={15}
+          className='map'
         >
-         {/* <Marker
-          position={{lat: 52.527635, lng: 13.396750}}
+         
+          {console.log(this.state.selectedPlace.name)}
+          {this.state.venues.map( coffeePlace =>
+            <Marker
+            key={coffeePlace.venue.id}
+            position={{lat: coffeePlace.venue.location.lat, lng: coffeePlace.venue.location.lng}}
             onClick={this.onMarkerClick}
-            name={"Strandbad Mitte"}
-          />
-          <Marker
-          position={{lat: 52.5314220, lng: 13.402240}}
-            onClick={this.onMarkerClick}
-            name={"Café Fleury"}
-          /> 
-          <Marker
-          position={{lat: 52.526263, lng: 13.387928}}
-            onClick={this.onMarkerClick}
-            name={"espresso-ambulanzz"}
-          />
-          <Marker
-          position={{lat: 52.526230, lng: 13.400900}}
-            onClick={this.onMarkerClick}
-            name={"Barcomi's Deli"}
-          /> */}
-          <Marker
-            position={{lat: this.state.venues[6].venue.location.lat, lng: this.state.venues[6].venue.location.lng}}
-            onClick={this.onMarkerClick}
-            name={this.state.venues[6].venue.name}
-          />
+            name={coffeePlace.venue.name}
+            address={coffeePlace.venue.location.address}
+            />
+            )}
+        
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
           >
             <div>
               <h2>{this.state.selectedPlace.name}</h2>
-              <img src="https://igx.4sqi.net/img/general/200x200/8uSHjM2c0CMLFVa8KRlNFiHNUHmY0TXP7CL60n_iXu8.jpg"></img>
+              <h4>{this.state.selectedPlace.address}</h4>
+              <p>Data provided by www.foursquare.com.</p>
             </div>
           </InfoWindow>
         </Map>
+        
+          <div>
+            {this.state.selectedPlace.name ?
+              (
+                <div
+                  className='venue-list'>
+                    <div>{this.state.selectedPlace.name}</div>
+                </div>
+              ):
+                <div
+                  className='venue-list'>
+                    {this.state.venues.map( coffeePlace =>
+                      <div
+                        key={coffeePlace.venue.id}
+                        onClick={() => {
+                          this.onNameClick(coffeePlace)}}
+                          className='venue-list-name'
+                      >
+                      {coffeePlace.venue.name}
+                      </div>
+                    )}
+                </div>
+              }
+          </div>
+        </div>            
       </div>
     );
   }
@@ -87,9 +108,10 @@ class App extends Component {
       client_id: "NPR0B5NCIDR2XXO5VKUCMVVCW5NLXOTKPR0QCV1XIEZ1XSY3",
       client_secret: "WGMEUGPZUFCS1RHYY4YMKWR4E53ZA02HZ1XIGZSV3O35GHBZ",
       query: "coffee",
-      ll: "52.529186, 13.395621",
+      ll: "52.529715, 13.401338",
       v: "20180925",
-      radius:	"1000"
+      radius:	"250",
+      venuePhotos: '1'
     }
     axios.get(endPoint + new URLSearchParams(parameters))
       .then(response => {
