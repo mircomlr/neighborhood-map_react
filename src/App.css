@@ -18,7 +18,8 @@
 }
 .venue-list{
   position: fixed;
-  width: 25% ;
+  width: 28% ;
+  top: 160px;
   right: 0;
   margin-right: 0px;
   border:1px solid red;
@@ -28,8 +29,17 @@
 .map{
   position: fixed;
   left: 0;
-  width: 75% !important;
+  width: 72% !important;
   
+}
+
+.searchfield{
+  position: fixed;
+  width: 28% ;
+  right: 0;
+  margin-right: 0px;
+  border:1px solid red;
+  z-index: 1;
 }
 
 @media (max-width: 500px) {
@@ -37,7 +47,7 @@
     width: 100% !important;
     height: 300px !important;
   }
-  .venue-list{    
+  .venue-list, .searchfield{    
     width: 100%;    
     margin-top: 300px;
     border:1px solid red;

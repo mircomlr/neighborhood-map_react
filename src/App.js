@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import axios from 'axios';
+import Filter from './Components/Filter'
 
 class App extends Component {
   constructor(props) {
@@ -73,8 +74,11 @@ class App extends Component {
             </div>
           </InfoWindow>
         </Map>
-        
+            
           <div>
+          <Filter >
+            
+          </Filter>
             {this.state.selectedPlace.name ?
               (
                 <div
@@ -97,9 +101,12 @@ class App extends Component {
                 </div>
               }
           </div>
-        </div>            
+        </div>
       </div>
     );
+
+    
+
   }
 
   getVenues = () => {
