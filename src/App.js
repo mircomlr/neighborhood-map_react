@@ -28,12 +28,12 @@ class App extends Component {
   onNameClick(coffeePlace) {
     console.log("onNameClick:", coffeePlace)
     this.setState({
-      selectedPlace: coffeePlace.venue
+      selectedPlace: coffeePlace.venue,
+      filteredVenues: [coffeePlace]
     });
   }
   componentDidMount() {
     this.getVenues()
-  
   }
   updateQuery = (kwery) => {
     this.setState({ kwery })
@@ -73,35 +73,17 @@ class App extends Component {
           }}
           zoom={15}
           className='map'
-        >
-         
-          {console.log(this.state.selectedPlace)}
-          
-          {this.state.selectedPlace.name ?
-              (
-                <Marker
-            key={this.state.selectedPlace.id}
-            position={{lat: this.state.selectedPlace.lat, lng: this.state.selectedPlace.lng}}
-            onClick={this.onMarkerClick}
-            name={this.state.selectedPlace.name}
-            address={this.state.selectedPlace.address}
-            />
-              ):
-              this.state.filteredVenues.map( coffeePlace =>
-                
+        >         
+          {console.log(this.state.selectedPlace)}             
+              {this.state.filteredVenues.map( coffeePlace =>                
                 <Marker
                 key={coffeePlace.venue.id}
                 position={{lat: coffeePlace.venue.location.lat, lng: coffeePlace.venue.location.lng}}
                 onClick={this.onMarkerClick}
                 name={coffeePlace.venue.name}
-                address={coffeePlace.venue.location.address}
-                
+                address={coffeePlace.venue.location.address}                
                 />
-
-                
-
                 )
-
               }
           <InfoWindow
             marker={this.state.activeMarker}
