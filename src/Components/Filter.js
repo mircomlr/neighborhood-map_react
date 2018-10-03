@@ -1,6 +1,6 @@
 import React from 'react';
 
-const filter = () => {
+const filter = ({updateQuery, kwery}) => {
     return (
     
 <div className='searchfield'>
@@ -8,6 +8,9 @@ const filter = () => {
       <input
         type='text'
         placeholder='Type for search...'
+        value={kwery}
+        onChange={(event) => updateQuery(event.target.value)}
+        
       />
     </div>
 

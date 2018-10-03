@@ -13,7 +13,9 @@ class App extends Component {
       activeMarker: {},
       selectedPlace: {},
       venues: [],
-      status: "initial"
+      status: "initial",
+      filteredVenues: [],
+      kwery: ''
     };
   }
   onMarkerClick(props, marker, e) {
@@ -31,7 +33,28 @@ class App extends Component {
   }
   componentDidMount() {
     this.getVenues()
+  
   }
+  updateQuery = (kwery) => {
+    this.setState({ kwery })
+    if (kwery) {
+      console.log('state.venues:', this.state.venues)
+      console.log('query:', kwery)
+      console.log('filtered:', this.state.filteredVenues)
+      this.setState({
+        filteredVenues: this.state.venues
+        .filter((venue) => venue.venue.name
+            .toLowerCase()
+            .indexOf(kwery.toLowerCase()) === 0)
+      })
+    } else {
+      this.setState({
+        filteredVenues: this.state.venues,
+        selectedPlace: {}
+      })
+    }
+  }
+
   render() {
     if (this.state.status === "initial") {
       return null;
@@ -52,17 +75,34 @@ class App extends Component {
           className='map'
         >
          
-          {console.log(this.state.selectedPlace.name)}
-          {this.state.venues.map( coffeePlace =>
-            <Marker
-            key={coffeePlace.venue.id}
-            position={{lat: coffeePlace.venue.location.lat, lng: coffeePlace.venue.location.lng}}
+          {console.log(this.state.selectedPlace)}
+          
+          {this.state.selectedPlace.name ?
+              (
+                <Marker
+            key={this.state.selectedPlace.id}
+            position={{lat: this.state.selectedPlace.lat, lng: this.state.selectedPlace.lng}}
             onClick={this.onMarkerClick}
-            name={coffeePlace.venue.name}
-            address={coffeePlace.venue.location.address}
+            name={this.state.selectedPlace.name}
+            address={this.state.selectedPlace.address}
             />
-            )}
-        
+              ):
+              this.state.filteredVenues.map( coffeePlace =>
+                
+                <Marker
+                key={coffeePlace.venue.id}
+                position={{lat: coffeePlace.venue.location.lat, lng: coffeePlace.venue.location.lng}}
+                onClick={this.onMarkerClick}
+                name={coffeePlace.venue.name}
+                address={coffeePlace.venue.location.address}
+                
+                />
+
+                
+
+                )
+
+              }
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
@@ -73,11 +113,10 @@ class App extends Component {
               <p>Data provided by www.foursquare.com.</p>
             </div>
           </InfoWindow>
-        </Map>
-            
+        </Map>  
           <div>
-          <Filter >
-            
+          <Filter 
+            updateQuery={this.updateQuery}> 
           </Filter>
             {this.state.selectedPlace.name ?
               (
@@ -88,7 +127,8 @@ class App extends Component {
               ):
                 <div
                   className='venue-list'>
-                    {this.state.venues.map( coffeePlace =>
+                  {console.log(this.state.filteredVenues)}
+                    {this.state.filteredVenues.map( coffeePlace =>
                       <div
                         key={coffeePlace.venue.id}
                         onClick={() => {
@@ -104,9 +144,6 @@ class App extends Component {
         </div>
       </div>
     );
-
-    
-
   }
 
   getVenues = () => {
@@ -118,12 +155,12 @@ class App extends Component {
       ll: "52.529715, 13.401338",
       v: "20180925",
       radius:	"250",
-      venuePhotos: '1'
     }
     axios.get(endPoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
         venues: response.data.response.groups[0].items,
+        filteredVenues: response.data.response.groups[0].items,
         status: "loaded" 
         })
       })
