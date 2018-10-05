@@ -100,13 +100,7 @@ class App extends Component {
           <Filter 
             updateQuery={this.updateQuery}> 
           </Filter>
-            {this.state.selectedPlace.name ?
-              (
-                <div
-                  className='venue-list'>
-                    <div>{this.state.selectedPlace.name}</div>
-                </div>
-              ):
+            
                 <div
                   className='venue-list'>
                   {console.log(this.state.filteredVenues)}
